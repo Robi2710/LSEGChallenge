@@ -1,5 +1,11 @@
 # Diagram Generator (SVG-Only) 📊
 
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![Google Gemini](https://img.shields.io/badge/Gemini-API-4285F4?logo=google&logoColor=white)](https://ai.google.dev)
+[![Ollama](https://img.shields.io/badge/Ollama-local-black?logo=llvm&logoColor=white)](https://ollama.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
 This repository contains a team-built AI diagram generator focused **strictly on SVG output**. The project is structured to facilitate teamwork, clearly dividing responsibilities across various architectural components.
 
 ## 🚀 Project Overview
