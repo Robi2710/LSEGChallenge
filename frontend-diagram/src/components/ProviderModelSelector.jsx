@@ -16,6 +16,7 @@ function ProviderModelSelector({
     <div className="selector-grid">
       <label>
         Provider
+        <span className="field-help">Pick cloud Gemini or local Ollama runtime.</span>
         <select value={provider} onChange={(event) => onProviderChange(event.target.value)}>
           <option value={AI_PROVIDERS.OLLAMA}>Ollama (Local)</option>
           <option value={AI_PROVIDERS.GEMINI}>Gemini</option>
@@ -24,6 +25,7 @@ function ProviderModelSelector({
 
       <label>
         Model
+        <span className="field-help">Use a fast model for drafts and larger models for detail.</span>
         <select value={model} onChange={(event) => onModelChange(event.target.value)}>
           {models.map((item) => (
             <option key={item} value={item}>
@@ -36,6 +38,7 @@ function ProviderModelSelector({
       {isOllama ? (
         <label className="full-row">
           Ollama Base URL
+          <span className="field-help">Default local endpoint is shown below.</span>
           <input
             type="url"
             value={ollamaBaseUrl}

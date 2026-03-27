@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import ProviderModelSelector from './components/ProviderModelSelector'
+import SvgRenderer from './components/SvgRenderer'
 import {
   AI_PROVIDERS,
   DEFAULT_OLLAMA_BASE_URL,
@@ -78,14 +79,41 @@ function buildChatPrompt(messages, latestRequest, currentSvg) {
   ].join('\n')
 }
 
+function getSavedProvider() {
+  const savedProvider = localStorage.getItem('diagram-provider')
+
+  if (savedProvider && Object.values(AI_PROVIDERS).includes(savedProvider)) {
+    return savedProvider
+  }
+
+  return DEFAULT_PROVIDER
+}
+
+function getSavedModel(initialProvider) {
+  const savedModel = localStorage.getItem('diagram-model')
+
+  if (savedModel) {
+    return savedModel
+  }
+
+  return getDefaultModelForProvider(initialProvider)
+}
+
 function App() {
+<<<<<<< HEAD
   const [chatInput, setChatInput] = useState('')
   const [chatMessages, setChatMessages] = useState(() => loadStoredChatHistory())
   const [provider, setProvider] = useState(DEFAULT_PROVIDER)
+=======
+  const [prompt, setPrompt] = useState(
+    'Draw a simple architecture with frontend, backend, and database boxes connected by arrows.',
+  )
+  const [provider, setProvider] = useState(getSavedProvider)
+>>>>>>> 242aeb79a0ebca65930f616a551aa96c85b706bf
   const [ollamaBaseUrl, setOllamaBaseUrl] = useState(DEFAULT_OLLAMA_BASE_URL)
   const [ollamaModels, setOllamaModels] = useState(OLLAMA_FALLBACK_MODELS)
   const [modelWarning, setModelWarning] = useState('')
-  const [model, setModel] = useState(getDefaultModelForProvider(DEFAULT_PROVIDER))
+  const [model, setModel] = useState(() => getSavedModel(getSavedProvider()))
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -106,19 +134,33 @@ function App() {
     return ollamaModels
   }, [ollamaModels, provider])
 
-  useEffect(() => {
-    const savedProvider = localStorage.getItem('diagram-provider')
-    const savedModel = localStorage.getItem('diagram-model')
+  const trimmedPromptLength = prompt.trim().length
+  const canGenerate = !loading && trimmedPromptLength >= 10
 
+<<<<<<< HEAD
     if (savedProvider && Object.values(AI_PROVIDERS).includes(savedProvider)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setProvider(savedProvider)
     }
+=======
+  const previewStatus = loading
+    ? 'rendering'
+    : error
+      ? 'error'
+      : parsedCode
+        ? 'success'
+        : 'empty'
 
-    if (savedModel) {
-      setModel(savedModel)
-    }
-  }, [])
+  const previewStatusLabel =
+    previewStatus === 'rendering'
+      ? 'Generating'
+      : previewStatus === 'error'
+        ? 'Needs attention'
+        : previewStatus === 'success'
+          ? 'Ready'
+          : 'Idle'
+>>>>>>> 242aeb79a0ebca65930f616a551aa96c85b706bf
+
 
   useEffect(() => {
     localStorage.setItem('diagram-provider', provider)
@@ -288,26 +330,42 @@ function App() {
   return (
     <main className="app">
       <header className="app-header">
-        <h1>Diagram Generator</h1>
-        <p>Generate fenced SVG code using Gemini or local Ollama models.</p>
+        <div>
+          <p className="eyebrow">AI Diagram Studio</p>
+          <h1>SVG Diagram Generator</h1>
+          <p>Prompt a model, parse fenced SVG output, and preview the final diagram.</p>
+        </div>
+
+        <div className="header-badges" aria-label="Current session information">
+          <span className="badge">Output: SVG</span>
+          <span className="badge badge-provider">Provider: {provider}</span>
+        </div>
       </header>
 
       <section className="workspace">
         <div className="panel panel-input">
+<<<<<<< HEAD
           <h2>Chat</h2>
           <p>Chat with the AI to create and refine your SVG diagram. History is saved locally.</p>
+=======
+          <div className="panel-section">
+            <h2>1. Setup model</h2>
+            <p>Choose your provider and model before generation.</p>
+>>>>>>> 242aeb79a0ebca65930f616a551aa96c85b706bf
 
-          <ProviderModelSelector
-            provider={provider}
-            onProviderChange={handleProviderChange}
-            model={model}
-            models={availableModels}
-            onModelChange={setModel}
-            ollamaBaseUrl={ollamaBaseUrl}
-            onOllamaBaseUrlChange={setOllamaBaseUrl}
-            modelWarning={modelWarning}
-          />
+            <ProviderModelSelector
+              provider={provider}
+              onProviderChange={handleProviderChange}
+              model={model}
+              models={availableModels}
+              onModelChange={setModel}
+              ollamaBaseUrl={ollamaBaseUrl}
+              onOllamaBaseUrlChange={setOllamaBaseUrl}
+              modelWarning={modelWarning}
+            />
+          </div>
 
+<<<<<<< HEAD
           <div ref={chatScrollRef} className="chat-thread" aria-live="polite">
             {chatMessages.length === 0 ? (
               <div className="chat-empty">Start by describing a diagram. Follow-up messages can modify it.</div>
@@ -338,6 +396,28 @@ function App() {
             </button>
             <button className="secondary" onClick={clearChatHistory} disabled={loading}>
               Clear Chat
+=======
+          <div className="panel-section panel-section-grow">
+            <div className="section-heading">
+              <h2>2. Describe the diagram</h2>
+              <span>{trimmedPromptLength} chars</span>
+            </div>
+
+            <textarea
+              value={prompt}
+              onChange={(event) => setPrompt(event.target.value)}
+              placeholder="Describe your diagram request..."
+            />
+
+            <p className={trimmedPromptLength < 10 ? 'hint hint-warning' : 'hint'}>
+              Use at least 10 characters so generation can start.
+            </p>
+          </div>
+
+          <div className="actions">
+            <button onClick={handleGenerate} disabled={!canGenerate}>
+              {loading ? 'Generating...' : '3. Generate SVG'}
+>>>>>>> 242aeb79a0ebca65930f616a551aa96c85b706bf
             </button>
             <button className="secondary" onClick={resetOutput} disabled={loading}>
               Clear Output
@@ -346,16 +426,15 @@ function App() {
         </div>
 
         <div className="panel panel-preview">
-          <h2>Output</h2>
-          <p>Parser output is shown below. SVG is rendered live.</p>
-
-          {loading ? (
-            <div className="render-state">
-              <h3>Generating</h3>
-              <p>Waiting for model response...</p>
+          <div className="section-heading section-heading-preview">
+            <div>
+              <h2>Preview</h2>
+              <p>Parsed SVG output is rendered live.</p>
             </div>
-          ) : null}
+            <span className={`status-pill status-${previewStatus}`}>{previewStatusLabel}</span>
+          </div>
 
+<<<<<<< HEAD
           {!loading && error ? (
             <div className="render-state render-state-error">
               <h3>Generation Failed</h3>
@@ -394,9 +473,12 @@ function App() {
               <div className="svg-stage" dangerouslySetInnerHTML={{ __html: parsedCode }} />
             </div>
           ) : null}
+=======
+          <SvgRenderer svgCode={parsedCode} status={previewStatus} error={error} />
+>>>>>>> 242aeb79a0ebca65930f616a551aa96c85b706bf
 
           {rawResponse ? (
-            <details className="raw-output">
+            <details className="raw-output" open={Boolean(error)}>
               <summary>Raw model response</summary>
               <pre>{rawResponse}</pre>
             </details>
