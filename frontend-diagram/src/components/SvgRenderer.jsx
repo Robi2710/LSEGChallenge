@@ -1,4 +1,38 @@
+import { useRef, useState } from 'react'
+
 function SvgRenderer({ svgCode, status, error }) {
+  const svgContainerRef = useRef(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
+
+  function handleMouseDown(e) {
+    setIsDragging(true)
+    setDragStart({ x: e.clientX, y: e.clientY })
+  }
+
+  function handleMouseMove(e) {
+    if (!isDragging || !svgContainerRef.current) return
+
+    const dx = e.clientX - dragStart.x
+    const dy = e.clientY - dragStart.y
+
+    setPanOffset((prev) => ({
+      x: prev.x + dx,
+      y: prev.y + dy,
+    }))
+
+    setDragStart({ x: e.clientX, y: e.clientY })
+  }
+
+  function handleMouseUp() {
+    setIsDragging(false)
+  }
+
+  function handleReset() {
+    setPanOffset({ x: 0, y: 0 })
+  }
+
   if (status === 'empty') {
     return (
       <div className="render-state">
@@ -27,11 +61,28 @@ function SvgRenderer({ svgCode, status, error }) {
   }
 
   return (
-    <div
-      className="svg-stage"
-      aria-label="SVG diagram preview"
-      dangerouslySetInnerHTML={{ __html: svgCode }}
-    />
+    <div>
+      <div
+        ref={svgContainerRef}
+        className="svg-stage"
+        aria-label="SVG diagram preview"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        style={{
+          cursor: isDragging ? 'grabbing' : 'grab',
+          transform: `translate(${panOffset.x}px, ${panOffset.y}px)`,
+          transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+        }}
+        dangerouslySetInnerHTML={{ __html: svgCode }}
+      />
+      {(panOffset.x !== 0 || panOffset.y !== 0) && (
+        <button className="reset-pan-btn" onClick={handleReset} title="Reset position">
+          Reset Zoom/Pan
+        </button>
+      )}
+    </div>
   )
 }
 

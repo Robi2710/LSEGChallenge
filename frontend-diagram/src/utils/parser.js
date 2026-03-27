@@ -7,27 +7,29 @@ export function extractFencedDiagram(rawResponse, diagramType) {
     }
   }
 
-  const fencePattern = new RegExp(
-    '^```' + diagramType + '\\n([\\s\\S]*?)\\n```$',
-    'im',
-  )
-  const match = rawResponse.match(fencePattern)
+  // Try multiple fence patterns to handle variations
+  const patterns = [
+    new RegExp(`^\`\`\`${diagramType}\\n([\\s\\S]*?)\\n\`\`\`$`, 'im'),
+    new RegExp(`\`\`\`${diagramType}\\n([\\s\\S]*?)\\n\`\`\``, 'i'),
+    new RegExp(`<${diagramType}[\\s\\S]*<\\/${diagramType}>`, 'i'),
+  ]
 
-  if (!match) {
-    return {
-      ok: false,
-      code: '',
-      error: `No fenced ${diagramType} block found in model response.`,
+  let match = null
+  let code = ''
+
+  for (const pattern of patterns) {
+    match = rawResponse.match(pattern)
+    if (match) {
+      code = (match[1] || match[0] || '').trim()
+      break
     }
   }
-
-  const code = (match[1] || '').trim()
 
   if (!code) {
     return {
       ok: false,
       code: '',
-      error: `${diagramType.toUpperCase()} block is empty.`,
+      error: `No valid ${diagramType} block found in model response.`,
     }
   }
 
@@ -35,7 +37,8 @@ export function extractFencedDiagram(rawResponse, diagramType) {
     return {
       ok: false,
       code: '',
-      error: 'Extracted SVG block is malformed.',
+      error:
+        'Invalid SVG: missing opening <svg> or closing </svg> tag. Check model output quality.',
     }
   }
 

@@ -3,7 +3,11 @@ export const AI_PROVIDERS = {
   OLLAMA: 'ollama',
 }
 
-export const GEMINI_DEFAULT_MODELS = ['gemini-2.0-flash', 'gemini-1.5-pro']
+export const GEMINI_DEFAULT_MODELS = [
+  'gemini-2.5-flash',
+  'gemini-2.5-pro',
+  'gemini-2.0-flash',
+]
 
 export const OLLAMA_FALLBACK_MODELS = ['qwen2.5:7b', 'qwen2.5:3b']
 
