@@ -1,16 +1,33 @@
-# React + Vite
+# Frontend Diagram (SVG-Only Renderer)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This frontend is the Owner C rendering workspace for the diagram generator app. It is currently scoped to **SVG-only** output.
 
-Currently, two official plugins are available:
+## What is implemented
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- SVG input editor (paste model output)
+- SVG validation (`<svg ...></svg>` required)
+- Render states: empty, rendering, success, error
+- Preview panel for rendered SVG
+- Utility actions: copy SVG and download `.svg`
 
-## React Compiler
+## Run locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+## Build
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm run build
+```
+
+## Integration contract (Owner C ↔ Owner B)
+
+`SvgRenderer` expects a raw SVG string. Upstream parser should return:
+
+- `type`: `svg`
+- `code`: complete SVG markup string
+
+If code is not a full SVG element, renderer shows an error state.
