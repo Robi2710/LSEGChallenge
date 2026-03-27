@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import ProviderModelSelector from './components/ProviderModelSelector'
+import SvgRenderer from './components/SvgRenderer'
 import {
   AI_PROVIDERS,
   DEFAULT_OLLAMA_BASE_URL,
@@ -13,15 +14,35 @@ import { generateDiagram } from './services/ai/providerRouter'
 import { fetchOllamaModels } from './services/ai/providers/ollamaClient'
 import { extractFencedDiagram } from './utils/parser'
 
+function getSavedProvider() {
+  const savedProvider = localStorage.getItem('diagram-provider')
+
+  if (savedProvider && Object.values(AI_PROVIDERS).includes(savedProvider)) {
+    return savedProvider
+  }
+
+  return DEFAULT_PROVIDER
+}
+
+function getSavedModel(initialProvider) {
+  const savedModel = localStorage.getItem('diagram-model')
+
+  if (savedModel) {
+    return savedModel
+  }
+
+  return getDefaultModelForProvider(initialProvider)
+}
+
 function App() {
   const [prompt, setPrompt] = useState(
     'Draw a simple architecture with frontend, backend, and database boxes connected by arrows.',
   )
-  const [provider, setProvider] = useState(DEFAULT_PROVIDER)
+  const [provider, setProvider] = useState(getSavedProvider)
   const [ollamaBaseUrl, setOllamaBaseUrl] = useState(DEFAULT_OLLAMA_BASE_URL)
   const [ollamaModels, setOllamaModels] = useState(OLLAMA_FALLBACK_MODELS)
   const [modelWarning, setModelWarning] = useState('')
-  const [model, setModel] = useState(getDefaultModelForProvider(DEFAULT_PROVIDER))
+  const [model, setModel] = useState(() => getSavedModel(getSavedProvider()))
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -38,18 +59,26 @@ function App() {
     return ollamaModels
   }, [ollamaModels, provider])
 
-  useEffect(() => {
-    const savedProvider = localStorage.getItem('diagram-provider')
-    const savedModel = localStorage.getItem('diagram-model')
+  const trimmedPromptLength = prompt.trim().length
+  const canGenerate = !loading && trimmedPromptLength >= 10
 
-    if (savedProvider && Object.values(AI_PROVIDERS).includes(savedProvider)) {
-      setProvider(savedProvider)
-    }
+  const previewStatus = loading
+    ? 'rendering'
+    : error
+      ? 'error'
+      : parsedCode
+        ? 'success'
+        : 'empty'
 
-    if (savedModel) {
-      setModel(savedModel)
-    }
-  }, [])
+  const previewStatusLabel =
+    previewStatus === 'rendering'
+      ? 'Generating'
+      : previewStatus === 'error'
+        ? 'Needs attention'
+        : previewStatus === 'success'
+          ? 'Ready'
+          : 'Idle'
+
 
   useEffect(() => {
     localStorage.setItem('diagram-provider', provider)
@@ -139,35 +168,56 @@ function App() {
   return (
     <main className="app">
       <header className="app-header">
-        <h1>Diagram Generator</h1>
-        <p>Generate fenced SVG code using Gemini or local Ollama models.</p>
+        <div>
+          <p className="eyebrow">AI Diagram Studio</p>
+          <h1>SVG Diagram Generator</h1>
+          <p>Prompt a model, parse fenced SVG output, and preview the final diagram.</p>
+        </div>
+
+        <div className="header-badges" aria-label="Current session information">
+          <span className="badge">Output: SVG</span>
+          <span className="badge badge-provider">Provider: {provider}</span>
+        </div>
       </header>
 
       <section className="workspace">
         <div className="panel panel-input">
-          <h2>Input</h2>
-          <p>Describe the diagram and choose provider/model before generating.</p>
+          <div className="panel-section">
+            <h2>1. Setup model</h2>
+            <p>Choose your provider and model before generation.</p>
 
-          <ProviderModelSelector
-            provider={provider}
-            onProviderChange={handleProviderChange}
-            model={model}
-            models={availableModels}
-            onModelChange={setModel}
-            ollamaBaseUrl={ollamaBaseUrl}
-            onOllamaBaseUrlChange={setOllamaBaseUrl}
-            modelWarning={modelWarning}
-          />
+            <ProviderModelSelector
+              provider={provider}
+              onProviderChange={handleProviderChange}
+              model={model}
+              models={availableModels}
+              onModelChange={setModel}
+              ollamaBaseUrl={ollamaBaseUrl}
+              onOllamaBaseUrlChange={setOllamaBaseUrl}
+              modelWarning={modelWarning}
+            />
+          </div>
 
-          <textarea
-            value={prompt}
-            onChange={(event) => setPrompt(event.target.value)}
-            placeholder="Describe your diagram request..."
-          />
+          <div className="panel-section panel-section-grow">
+            <div className="section-heading">
+              <h2>2. Describe the diagram</h2>
+              <span>{trimmedPromptLength} chars</span>
+            </div>
+
+            <textarea
+              value={prompt}
+              onChange={(event) => setPrompt(event.target.value)}
+              placeholder="Describe your diagram request..."
+            />
+
+            <p className={trimmedPromptLength < 10 ? 'hint hint-warning' : 'hint'}>
+              Use at least 10 characters so generation can start.
+            </p>
+          </div>
 
           <div className="actions">
-            <button onClick={handleGenerate} disabled={loading}>
-              {loading ? 'Generating...' : 'Generate Diagram'}
+            <button onClick={handleGenerate} disabled={!canGenerate}>
+              {loading ? 'Generating...' : '3. Generate SVG'}
             </button>
             <button className="secondary" onClick={resetOutput} disabled={loading}>
               Clear Output
@@ -176,36 +226,18 @@ function App() {
         </div>
 
         <div className="panel panel-preview">
-          <h2>Output</h2>
-          <p>Parser output is shown below. SVG is rendered live.</p>
-
-          {loading ? (
-            <div className="render-state">
-              <h3>Generating</h3>
-              <p>Waiting for model response...</p>
+          <div className="section-heading section-heading-preview">
+            <div>
+              <h2>Preview</h2>
+              <p>Parsed SVG output is rendered live.</p>
             </div>
-          ) : null}
+            <span className={`status-pill status-${previewStatus}`}>{previewStatusLabel}</span>
+          </div>
 
-          {!loading && error ? (
-            <div className="render-state render-state-error">
-              <h3>Generation Failed</h3>
-              <p>{error}</p>
-            </div>
-          ) : null}
-
-          {!loading && !error && !parsedCode ? (
-            <div className="render-state">
-              <h3>No diagram yet</h3>
-              <p>Generate a diagram to preview parsed output.</p>
-            </div>
-          ) : null}
-
-          {!loading && !error && parsedCode ? (
-            <div className="svg-stage" dangerouslySetInnerHTML={{ __html: parsedCode }} />
-          ) : null}
+          <SvgRenderer svgCode={parsedCode} status={previewStatus} error={error} />
 
           {rawResponse ? (
-            <details className="raw-output">
+            <details className="raw-output" open={Boolean(error)}>
               <summary>Raw model response</summary>
               <pre>{rawResponse}</pre>
             </details>
