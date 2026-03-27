@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 480" width="860" height="480" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <linearGradient id="hdrG" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#007a87"/>
+      <stop offset="100%" style="stop-color:#005f69"/>
+    </linearGradient>
+    <filter id="sh2">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#10242d" flood-opacity="0.10"/>
+    </filter>
+    <marker id="ar2" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#007a87"/>
+    </marker>
+  </defs>
+
+  <!-- bg -->
+  <rect width="860" height="480" fill="#e9f3f5" rx="12"/>
+
+  <!-- header -->
+  <rect x="0" y="0" width="860" height="44" fill="url(#hdrG)" rx="12"/>
+  <rect x="0" y="32" width="860" height="12" fill="url(#hdrG)"/>
+  <text x="430" y="28" text-anchor="middle" fill="white" font-size="16" font-weight="700">Component Hierarchy &amp; File Structure</text>
+
+  <!-- Root App -->
+  <rect x="330" y="64" width="200" height="44" rx="8" fill="#007a87" filter="url(#sh2)"/>
+  <text x="430" y="82" text-anchor="middle" fill="white" font-size="12" font-weight="700">App.jsx</text>
+  <text x="430" y="99" text-anchor="middle" fill="#d8f2f4" font-size="10">Owner A · State Orchestrator</text>
+
+  <!-- Arrows from App -->
+  <line x1="360" y1="108" x2="180" y2="155" stroke="#007a87" stroke-width="1.5" marker-end="url(#ar2)"/>
+  <line x1="430" y1="108" x2="430" y2="155" stroke="#007a87" stroke-width="1.5" marker-end="url(#ar2)"/>
+  <line x1="500" y1="108" x2="680" y2="155" stroke="#007a87" stroke-width="1.5" marker-end="url(#ar2)"/>
+
+  <!-- ProviderModelSelector -->
+  <rect x="50"  y="157" width="260" height="54" rx="8" fill="white" filter="url(#sh2)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <text x="180" y="177" text-anchor="middle" fill="#10242d" font-size="11" font-weight="600">ProviderModelSelector.jsx</text>
+  <text x="180" y="192" text-anchor="middle" fill="#5b7280" font-size="10">Provider + Model dropdown</text>
+  <text x="180" y="204" text-anchor="middle" fill="#5b7280" font-size="10">Ollama base URL input</text>
+
+  <!-- Chat / Prompt UI -->
+  <rect x="330" y="157" width="200" height="54" rx="8" fill="white" filter="url(#sh2)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <text x="430" y="177" text-anchor="middle" fill="#10242d" font-size="11" font-weight="600">Chat / Prompt UI</text>
+  <text x="430" y="192" text-anchor="middle" fill="#5b7280" font-size="10">Textarea + Send button</text>
+  <text x="430" y="204" text-anchor="middle" fill="#5b7280" font-size="10">Message thread</text>
+
+  <!-- SvgRenderer -->
+  <rect x="550" y="157" width="260" height="54" rx="8" fill="white" filter="url(#sh2)" stroke="#007a87" stroke-width="2"/>
+  <text x="680" y="177" text-anchor="middle" fill="#10242d" font-size="11" font-weight="600">SvgRenderer.jsx</text>
+  <text x="680" y="192" text-anchor="middle" fill="#5b7280" font-size="10">Owner C · SVG preview</text>
+  <text x="680" y="204" text-anchor="middle" fill="#5b7280" font-size="10">Pan / Zoom / States</text>
+
+  <!-- Arrow from Chat to Services -->
+  <line x1="430" y1="211" x2="430" y2="245" stroke="#007a87" stroke-width="1.5" marker-end="url(#ar2)"/>
+  <!-- Arrow from SvgRenderer to utils -->
+  <line x1="680" y1="211" x2="680" y2="245" stroke="#007a87" stroke-width="1.5" marker-end="url(#ar2)"/>
+
+  <!-- Services section -->
+  <rect x="30" y="247" width="500" height="100" rx="8" fill="white" filter="url(#sh2)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <rect x="30" y="247" width="500" height="24" rx="8" fill="#d8f2f4"/>
+  <rect x="30" y="259" width="500" height="12" fill="#d8f2f4"/>
+  <text x="280" y="264" text-anchor="middle" fill="#005f69" font-size="11" font-weight="700">services/ai/ — Owner B</text>
+  <!-- inner boxes -->
+  <rect x="44"  y="278" width="120" height="54" rx="6" fill="#f6efe3" stroke="#d5e2e7" stroke-width="1"/>
+  <text x="104" y="296" text-anchor="middle" fill="#10242d" font-size="10" font-weight="600">providerRouter.js</text>
+  <text x="104" y="311" text-anchor="middle" fill="#5b7280" font-size="9">Routes to provider</text>
+  <text x="104" y="325" text-anchor="middle" fill="#5b7280" font-size="9">Gemini / Ollama</text>
+
+  <rect x="178" y="278" width="120" height="54" rx="6" fill="#f6efe3" stroke="#d5e2e7" stroke-width="1"/>
+  <text x="238" y="296" text-anchor="middle" fill="#10242d" font-size="10" font-weight="600">promptBuilder.js</text>
+  <text x="238" y="311" text-anchor="middle" fill="#5b7280" font-size="9">SVG-strict system</text>
+  <text x="238" y="325" text-anchor="middle" fill="#5b7280" font-size="9">prompt template</text>
+
+  <rect x="312" y="278" width="120" height="54" rx="6" fill="#f6efe3" stroke="#d5e2e7" stroke-width="1"/>
+  <text x="372" y="296" text-anchor="middle" fill="#10242d" font-size="10" font-weight="600">geminiClient.js</text>
+  <text x="372" y="311" text-anchor="middle" fill="#5b7280" font-size="9">Google Gemini API</text>
+  <text x="372" y="325" text-anchor="middle" fill="#5b7280" font-size="9">T=0.2 / flash+pro</text>
+
+  <rect x="446" y="278" width="70" height="54" rx="6" fill="#f6efe3" stroke="#d5e2e7" stroke-width="1"/>
+  <text x="481" y="296" text-anchor="middle" fill="#10242d" font-size="10" font-weight="600">ollama</text>
+  <text x="481" y="311" text-anchor="middle" fill="#5b7280" font-size="9">Client.js</text>
+  <text x="481" y="325" text-anchor="middle" fill="#5b7280" font-size="9">Local LLM</text>
+
+  <!-- Utils section -->
+  <rect x="550" y="247" width="280" height="100" rx="8" fill="white" filter="url(#sh2)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <rect x="550" y="247" width="280" height="24" rx="8" fill="#d8f2f4"/>
+  <rect x="550" y="259" width="280" height="12" fill="#d8f2f4"/>
+  <text x="690" y="264" text-anchor="middle" fill="#005f69" font-size="11" font-weight="700">utils/ — Owner B &amp; C</text>
+
+  <rect x="564" y="278" width="76" height="54" rx="6" fill="#f6efe3" stroke="#d5e2e7" stroke-width="1"/>
+  <text x="602" y="296" text-anchor="middle" fill="#10242d" font-size="10" font-weight="600">parser.js</text>
+  <text x="602" y="311" text-anchor="middle" fill="#5b7280" font-size="9">extractFenced</text>
+  <text x="602" y="325" text-anchor="middle" fill="#5b7280" font-size="9">Diagram()</text>
+
+  <rect x="650" y="278" width="76" height="54" rx="6" fill="#f6efe3" stroke="#d5e2e7" stroke-width="1"/>
+  <text x="688" y="296" text-anchor="middle" fill="#10242d" font-size="10" font-weight="600">svg.js</text>
+  <text x="688" y="311" text-anchor="middle" fill="#5b7280" font-size="9">validate &amp;</text>
+  <text x="688" y="325" text-anchor="middle" fill="#5b7280" font-size="9">normalize SVG</text>
+
+  <rect x="736" y="278" width="80" height="54" rx="6" fill="#f6efe3" stroke="#d5e2e7" stroke-width="1"/>
+  <text x="776" y="296" text-anchor="middle" fill="#10242d" font-size="10" font-weight="600">export.js</text>
+  <text x="776" y="311" text-anchor="middle" fill="#5b7280" font-size="9">copy / download</text>
+  <text x="776" y="325" text-anchor="middle" fill="#5b7280" font-size="9">.svg file</text>
+
+  <!-- Config + Hooks row -->
+  <rect x="30" y="370" width="240" height="80" rx="8" fill="white" filter="url(#sh2)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <rect x="30" y="370" width="240" height="24" rx="8" fill="#d8f2f4"/>
+  <rect x="30" y="382" width="240" height="12" fill="#d8f2f4"/>
+  <text x="150" y="387" text-anchor="middle" fill="#005f69" font-size="11" font-weight="700">config/models.js</text>
+  <text x="150" y="408" text-anchor="middle" fill="#10242d" font-size="10">AI_PROVIDERS, GEMINI_DEFAULT_MODELS</text>
+  <text x="150" y="423" text-anchor="middle" fill="#10242d" font-size="10">OLLAMA_FALLBACK_MODELS</text>
+  <text x="150" y="438" text-anchor="middle" fill="#5b7280" font-size="10">getDefaultModelForProvider()</text>
+
+  <rect x="290" y="370" width="240" height="80" rx="8" fill="white" filter="url(#sh2)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <rect x="290" y="370" width="240" height="24" rx="8" fill="#d8f2f4"/>
+  <rect x="290" y="382" width="240" height="12" fill="#d8f2f4"/>
+  <text x="410" y="387" text-anchor="middle" fill="#005f69" font-size="11" font-weight="700">hooks/useDragState.js</text>
+  <text x="410" y="408" text-anchor="middle" fill="#10242d" font-size="10">Pan/zoom drag state</text>
+  <text x="410" y="423" text-anchor="middle" fill="#10242d" font-size="10">Mouse event handlers</text>
+
+  <rect x="550" y="370" width="280" height="80" rx="8" fill="white" filter="url(#sh2)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <rect x="550" y="370" width="280" height="24" rx="8" fill="#d8f2f4"/>
+  <rect x="550" y="382" width="280" height="12" fill="#d8f2f4"/>
+  <text x="690" y="387" text-anchor="middle" fill="#005f69" font-size="11" font-weight="700">Utility Components</text>
+  <text x="690" y="408" text-anchor="middle" fill="#10242d" font-size="10">EditableSvgStage · ColorEditor</text>
+  <text x="690" y="423" text-anchor="middle" fill="#10242d" font-size="10">TextPositionEditor</text>
+</svg>

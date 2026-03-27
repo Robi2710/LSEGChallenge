@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" width="900" height="560" font-family="'Segoe UI', system-ui, sans-serif">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f6efe3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e9f3f5;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#007a87;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#005f69;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#10242d" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#007a87"/>
+    </marker>
+  </defs>
+
+  <!-- Page background -->
+  <rect width="900" height="560" fill="url(#bgGrad)" rx="12"/>
+
+  <!-- Title bar -->
+  <rect x="0" y="0" width="900" height="52" fill="url(#headerGrad)" rx="12"/>
+  <rect x="0" y="40" width="900" height="12" fill="url(#headerGrad)"/>
+  <text x="450" y="32" text-anchor="middle" fill="white" font-size="18" font-weight="700" letter-spacing="0.5">LSEGChallenge — AI SVG Diagram Generator · System Architecture</text>
+
+  <!-- ─── LAYER LABELS ─────────────────────────────────────────────── -->
+  <text x="28" y="112" fill="#5b7280" font-size="11" font-weight="600" letter-spacing="1.2">USER LAYER</text>
+  <text x="28" y="222" fill="#5b7280" font-size="11" font-weight="600" letter-spacing="1.2">OWNER A — UI ORCHESTRATION</text>
+  <text x="28" y="340" fill="#5b7280" font-size="11" font-weight="600" letter-spacing="1.2">OWNER B — API &amp; PARSER</text>
+  <text x="28" y="458" fill="#5b7280" font-size="11" font-weight="600" letter-spacing="1.2">OWNER C — RENDERER</text>
+
+  <!-- ─── USER INPUT BOX ─────────────────────────────────────────── -->
+  <rect x="320" y="72" width="260" height="60" rx="10" fill="white" filter="url(#shadow)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <text x="450" y="97" text-anchor="middle" fill="#10242d" font-size="13" font-weight="600">🧑 User</text>
+  <text x="450" y="116" text-anchor="middle" fill="#5b7280" font-size="11">Natural language prompt</text>
+
+  <!-- Arrow: User → App -->
+  <line x1="450" y1="132" x2="450" y2="158" stroke="#007a87" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ─── APP (OWNER A) ──────────────────────────────────────────── -->
+  <rect x="180" y="160" width="540" height="80" rx="10" fill="white" filter="url(#shadow)" stroke="#007a87" stroke-width="2"/>
+  <rect x="180" y="160" width="540" height="30" rx="10" fill="#d8f2f4"/>
+  <rect x="180" y="178" width="540" height="12" fill="#d8f2f4"/>
+  <text x="450" y="180" text-anchor="middle" fill="#005f69" font-size="12" font-weight="700">App.jsx — Owner A</text>
+  <text x="280" y="210" text-anchor="middle" fill="#10242d" font-size="11">State management</text>
+  <text x="450" y="210" text-anchor="middle" fill="#10242d" font-size="11">Chat / Generate UI</text>
+  <text x="620" y="210" text-anchor="middle" fill="#10242d" font-size="11">Provider selector</text>
+  <text x="280" y="228" text-anchor="middle" fill="#5b7280" font-size="10">prompt, loading, error, parsedCode</text>
+  <text x="620" y="228" text-anchor="middle" fill="#5b7280" font-size="10">localStorage persistence</text>
+
+  <!-- Arrow: App → Provider Router -->
+  <line x1="450" y1="240" x2="450" y2="268" stroke="#007a87" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ─── PROVIDER ROUTER ─────────────────────────────────────────── -->
+  <rect x="270" y="270" width="360" height="50" rx="10" fill="white" filter="url(#shadow)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <text x="450" y="293" text-anchor="middle" fill="#10242d" font-size="12" font-weight="600">providerRouter.js — Owner B</text>
+  <text x="450" y="310" text-anchor="middle" fill="#5b7280" font-size="11">Routes request to Gemini or Ollama provider</text>
+
+  <!-- Arrow: Router → Gemini -->
+  <line x1="360" y1="320" x2="260" y2="348" stroke="#007a87" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- Arrow: Router → Ollama -->
+  <line x1="540" y1="320" x2="640" y2="348" stroke="#007a87" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ─── GEMINI ─────────────────────────────────────────────────── -->
+  <rect x="120" y="350" width="200" height="56" rx="10" fill="white" filter="url(#shadow)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <text x="220" y="373" text-anchor="middle" fill="#10242d" font-size="12" font-weight="600">☁️ Gemini API</text>
+  <text x="220" y="390" text-anchor="middle" fill="#5b7280" font-size="10">geminiClient.js</text>
+  <text x="220" y="403" text-anchor="middle" fill="#5b7280" font-size="10">gemini-2.5-flash / pro</text>
+
+  <!-- ─── OLLAMA ─────────────────────────────────────────────────── -->
+  <rect x="580" y="350" width="200" height="56" rx="10" fill="white" filter="url(#shadow)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <text x="680" y="373" text-anchor="middle" fill="#10242d" font-size="12" font-weight="600">🖥️ Ollama (local)</text>
+  <text x="680" y="390" text-anchor="middle" fill="#5b7280" font-size="10">ollamaClient.js</text>
+  <text x="680" y="403" text-anchor="middle" fill="#5b7280" font-size="10">qwen2.5:7b / 3b</text>
+
+  <!-- Arrow: Gemini → Parser -->
+  <line x1="220" y1="406" x2="370" y2="433" stroke="#007a87" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- Arrow: Ollama → Parser -->
+  <line x1="680" y1="406" x2="530" y2="433" stroke="#007a87" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ─── PARSER ─────────────────────────────────────────────────── -->
+  <rect x="310" y="435" width="280" height="50" rx="10" fill="white" filter="url(#shadow)" stroke="#d5e2e7" stroke-width="1.5"/>
+  <text x="450" y="458" text-anchor="middle" fill="#10242d" font-size="12" font-weight="600">parser.js — Owner B</text>
+  <text x="450" y="474" text-anchor="middle" fill="#5b7280" font-size="11">extractFencedDiagram() → SVG string</text>
+
+  <!-- Arrow: Parser → Renderer -->
+  <line x1="450" y1="485" x2="450" y2="508" stroke="#007a87" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ─── RENDERER ───────────────────────────────────────────────── -->
+  <rect x="180" y="510" width="540" height="38" rx="10" fill="white" filter="url(#shadow)" stroke="#007a87" stroke-width="2"/>
+  <text x="450" y="533" text-anchor="middle" fill="#005f69" font-size="12" font-weight="700">SvgRenderer.jsx — Owner C · Pan/Zoom · Copy · Download</text>
+
+  <!-- Layer divider lines -->
+  <line x1="20" y1="148" x2="880" y2="148" stroke="#d5e2e7" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="20" y1="258" x2="880" y2="258" stroke="#d5e2e7" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="20" y1="448" x2="880" y2="448" stroke="#d5e2e7" stroke-width="1" stroke-dasharray="4,4"/>
+</svg>
